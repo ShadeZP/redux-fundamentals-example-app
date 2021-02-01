@@ -1,5 +1,5 @@
 import {client} from "../../api/client";
-import {addTodo} from "../../actions";
+import {addTodo, todosLoaded} from "../../actions";
 
 const initialState = []
 
@@ -56,11 +56,11 @@ export default function todosReducer(state = initialState, action) {
       return state
   }
 }
+export const fetchTodos = () =>  async(dispatch, getState) => {
+    const response = await client.get('/fakeApi/todos')
+    dispatch(todosLoaded(response.todos))
+  }
 
-export async function fetchTodos(dispatch, getState) {
-  const response = await client.get('/fakeApi/todos')
-  dispatch({type: 'todos/todosLoaded', payload: response.todos})
-}
 
 export function saveNewTodo(text) {
   return async function saveNewTodoThunk(dispatch, getState) {
