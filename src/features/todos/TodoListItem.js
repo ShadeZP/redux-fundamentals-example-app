@@ -5,9 +5,10 @@ import {ReactComponent as TimesSolid} from './times-solid.svg'
 
 import {availableColors, capitalize} from '../filters/colors'
 import {selectColor, toggleTodo} from "../../actions";
+import {selectTodos} from "./todosSlice";
 
 const selectById = (state, todoId) => {
-  return state.todos.find(todo => todo.id === todoId)
+  return selectTodos(state).find(todo => todo.id === todoId)
 }
 
 const TodoListItem = ({id}) => {
