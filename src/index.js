@@ -7,7 +7,7 @@ import App from './App'
 import './api/server'
 
 import store from './store'
-import {fetchTodos} from "./features/todos/todosSlice";
+import {fetchTodos} from './features/todos/todosSlice'
 
 store.dispatch(fetchTodos())
 

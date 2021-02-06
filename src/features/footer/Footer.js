@@ -1,10 +1,9 @@
 import React from 'react'
+import {useDispatch, useSelector} from 'react-redux'
 
 import {availableColors, capitalize} from '../filters/colors'
-import {StatusFilters} from '../filters/filtersSlice'
-import {useDispatch, useSelector} from "react-redux";
-import {changeColorFilter, changeStatusFilter, clearCompleteTodo, completeAllTodo} from "../../actions";
-import {selectTodos} from "../todos/todosSlice";
+import {colorFilterChanged, statusFilterChanged, StatusFilters,} from '../filters/filtersSlice'
+import {allTodosCompleted, completedTodosCleared, selectTodos,} from '../todos/todosSlice'
 
 const RemainingTodos = ({count}) => {
   const suffix = count === 1 ? '' : 's'
@@ -76,26 +75,35 @@ const ColorFilters = ({value: colors, onChange}) => {
 }
 
 const Footer = () => {
-  const todosRemaining = useSelector(state => {
-    const uncompletedTodos = selectTodos(state).filter(todo => !todo.completed)
+  const dispatch = useDispatch()
+
+  const todosRemaining = useSelector((state) => {
+    const uncompletedTodos = selectTodos(state).filter(
+      (todo) => !todo.completed
+    )
     return uncompletedTodos.length
   })
 
-  const {status, colors} = useSelector(state => state.filters)
-  const dispatch = useDispatch()
+  const {status, colors} = useSelector((state) => state.filters)
 
+  const onMarkCompletedClicked = () => dispatch(allTodosCompleted())
+  const onClearCompletedClicked = () => dispatch(completedTodosCleared())
 
-  const onColorChange = (color, changeType) => dispatch(changeColorFilter(color, changeType))
-  const onStatusChange = (status) => dispatch(changeStatusFilter(status))
-  const onMarkCompletedClicked = () => dispatch(completeAllTodo())
-  const onClearCompletedClicked = () => dispatch(clearCompleteTodo())
+  const onColorChange = (color, changeType) =>
+    dispatch(colorFilterChanged(color, changeType))
+
+  const onStatusChange = (status) => dispatch(statusFilterChanged(status))
 
   return (
     <footer className="footer">
       <div className="actions">
         <h5>Actions</h5>
-        <button className="button" onClick={onMarkCompletedClicked}>Mark All Completed</button>
-        <button className="button" onClick={onClearCompletedClicked}>Clear Completed</button>
+        <button className="button" onClick={onMarkCompletedClicked}>
+          Mark All Completed
+        </button>
+        <button className="button" onClick={onClearCompletedClicked}>
+          Clear Completed
+        </button>
       </div>
 
       <RemainingTodos count={todosRemaining}/>
